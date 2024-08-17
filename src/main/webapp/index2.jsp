@@ -52,11 +52,11 @@
 	<%
 	// Variables 
 	
-	int limite = 1;
+	int limites = 12;
 	int pagina = 1; 
-	int offset = (pagina - 1) * limite;
+	int offset = (pagina - 1) * limites;
 	//String resultadoConsulta = consultasjsp.paginacion(limite, pagina); decartar
-	String limiteParam = request.getParameter("limites");
+	String limiteParam = request.getParameter("limitesForm");
 	String paginaParam = request.getParameter("pagina");
 	String formParam = request.getParameter("form");
 	String selectParam = request.getParameter("limitForm");
@@ -87,12 +87,15 @@
 	
 	<%
 	String mensaje = " ";
+	String query = "SELECT * FROM productos LIMIT " + limites + " OFFSET " + offset;
+	// ejecucamos consulta 
 	resultado = estado.executeQuery(query);
 
 	//if (resultado == null) {
 	%>
 	
 	<%
+	if ( resultado  != null){
 	while(resultado.next())	{
 	%>
 	<table class="tpl-tabla" border="1">
@@ -100,7 +103,7 @@
 		<tr>
 			<th>-</th>
 			<th>ID</th>
-			<th>Nombre</th>
+			<th>Precio</th>
 			<th>Precio</th>
 			<th>Imagen</th>
 			<th></th>
@@ -109,9 +112,8 @@
 		<tr>
 			<th>-</th>
 			<th><%out.print(resultado.getString("nombre")); %></th>
-			<% 	double precio = resultado.getDouble("Precio");%>
-			<th><%out.print(request.getDouble(precio)); %></th>
-			<th><%out.print(request.getString("Imagen")); %></th>
+			<th><%out.print(resultado.getDouble("Precio")); %></th>
+			<th><%out.print(resultado.getString("Imagen")); %></th>
 			<th>5</th>
 			<th>6</th>
 			<th>7</th>
@@ -119,7 +121,9 @@
 
 	</table>
 	<%
-	} 
+	}} else { 
+		out.print("no se ha podido dar resultado " + resultado);
+	}
 	
 	%>
 	<br>
@@ -132,17 +136,29 @@
 			<option value="9">9</option>
 			<option value="12">12</option>
 		</select>
+		<br><br>
+		<form action="index2.jps" name="pageform">
+		
+		<input type="hidden" id="sumaPagina" name="NextPage">
+		<input type="submit" name="Siguiente" value="Siguiente" >
+		<input type= "number" min="1" >
+		</form>
+		<br>
+		<form action="index2.jps" name="pageform2">
+		
+		<input type="hidden" id="restaPagina" name="prevPage">
+		<input type="submit" name="Anterior" value="Anterior">
+		
+		</form>
 		<%
 
-		String query = "SELECT * FROM productos LIMIT " + limite + " OFFSET " + offset;
-		resultado = estado.executeQuery(query);
+	out.print("Offset : "+offset+"\n");
 
 		//resultado = estado.executeQuery(query); //Mensajes.verMensaje("la consulta ha sido"+ resultadoConsulta);
 		%>
 
 	<%Mensajes.verMensaje(query); %>
 
-	
 	</form>
 
 </body>
