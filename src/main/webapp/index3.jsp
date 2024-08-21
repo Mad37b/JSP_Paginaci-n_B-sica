@@ -18,9 +18,7 @@
 	<%
 	Connection conexion = null;
 	Statement estado = null;
-	Statement estado2=null;
 	ResultSet resultado = null;
-	ResultSet resultado2 = null;
 
 	try {
 		out.println(" Deputacion de la conexion : ");
@@ -53,7 +51,10 @@
 	<!--  hago la consulta desde una clase java  -->
 
 	<%
-
+	// Variables 
+    int contador = 1;
+	int limites = 12;
+	int pagina = 2;
 	
 	
 	//Form
@@ -73,27 +74,14 @@
 	//Limit Form
 	
 	String limitForm = request.getParameter ("formLimit");
-	Mensajes.verMensaje("Parametro Form Limit : " + limitForm);
+	Mensajes.verMensaje("Parameto Form Limit : " + limitForm);
 	
 	//SQL 
 
 	String nombreSQL = request.getParameter("Nombre");
 	String precioSQL = request.getParameter("Precio");
 	String imagenSQL = request.getParameter("Imagen");
-	
-	// Variables 
-    int contador = 1;
-	int pagina = 2;
-	
 
-	
-	if ( limitParam == null){
-		
-		limitParam ="3";
-	}
-	
-	int intLimit  = Integer.parseInt(limitParam);
-	 int limites = intLimit;
 	// instancias 
 
 	//Consulta consultasjsp = new Consulta ();  
@@ -132,19 +120,9 @@
 	<%
 	String mensaje = " ";
 	String query = "SELECT * FROM productos LIMIT " + limites + " OFFSET " + offset;
-	String querypage = "SELECT COUNT(*) AS total FROM productos";
-
-	
+	String pageQuery="";
 	// ejecucamos consulta 
 	resultado = estado.executeQuery(query);
-	resultado2 = estado2.executeQuery(querypage);
-	
-	int totalRegistros = 0;
-
-	if (resultado2.next()) {
-	    totalRegistros = resultado2.getInt("total"); // Obtienes el valor de la columna 'total'
-	}
-	//out.print("el resultado de la consulta de las paginas ha sido :" + querypage);
 
 	//if (resultado == null) {
 	%>
@@ -199,7 +177,7 @@
 	String selected9 = (limites == 9) ? "seleted" : "";
 	String selected12 = (limites == 12) ? "seleted" : "";
 	
-	//int select3 = (int) request.getAtributte(0);
+	int select3 = (int) request.getAtributte(0);
 	
 	
 
@@ -214,11 +192,11 @@
 	<div class ="limite">
 	<form action="index2.jsp"  name="limitForm" method="POST">
 		<p>limite :</p>
-		<select name="limitSelect" id="nProductosVista">
-			<option value="3">3</option>
-			<option value="6">6</option>
-			<option value="9">9</option>
-			<option value="12">12</option>
+		<select name="limitSelect " id="nProductosVista">
+			<option value=<%=selected3 %>>3</option>
+			<option value=<%=selected6 %>>6</option>
+			<option value=<%=selected9 %>>9</option>
+			<option value=<%=selected12 %>>12</option>
 		</select>
 		<input type="submit" value="Mostrar" id="datos" >
 		
@@ -230,36 +208,13 @@
 		
 	}else{
 	Mensajes.verMensaje("el valor por ahora es " + limites);
-	Mensajes.verMensaje("Parámetro limitSelect: " + limitParam);} 
-	Mensajes.verMensaje("El form por ahora es :" + limitForm);
-	
-	if (limitForm !=null){
-		 out.println("La opción seleccionada es: " + limitForm);
-	}else{
-		out.print("la opcion no ha sido seleccionada" + limitForm);
-	}
-	
-	
-	// convertir parametro String a int 
-	
-	
-	if( limitParam !=null){
-		 intLimit  = Integer.parseInt(limitParam);
-		Mensajes.verMensaje("el parametro String a int ha sido : " + intLimit);
-	}else{
-		
-		Mensajes.verMensaje("el parametro String a int no se ha convertido");
-	}
-
-	
-	
-	%>
+	Mensajes.verMensaje("Parámetro limitSelect: " + limitParam);} %>
 	</div>
 	 	<br>
 		<br>
 		<!--  form para la Paginacion -->
 		<div class="contenedor">
-		<form action="index2.jsp" name="pageform" method="POST">
+		<form action="index2.jps" name="pageform" method="POST">
 
 			<input type="hidden" id="sumaPagina" name="NextPage"value=<%=pagina+1%>>
 			 <input type="submit" class="boton"name="Siguiente" value="Siguiente" value=> 
@@ -282,7 +237,7 @@
 
 		<%
 		Mensajes.verMensaje(query);
-		resultado2.close();
+				
 
 		%>
 
